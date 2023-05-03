@@ -1,0 +1,30 @@
+1. mysql 설치
+
+2. cmd에서 로그인
+> mysql -uroot -p
+Enter password: 본인 패스워드 작성 후 엔터
+mysql>
+
+3. 데이터베이스 목록 확인하기: show databases;
+[결과]
+information_schema
+mysqlperformance_schema
+sys
+등이 있을 거임.
+
+4. 데이터베이스 생성: create database swever;
+
+5. 생성한 데이터베이스 사용: use swever;
+
+6. swever 데이터베이스 안에 테이블 생성하기
+CREATE TABLE job_recruit(
+    id integer primary key auto_increment,
+    title varchar(100),
+    compnay_name varchar(50),
+    description text
+);
+
+7. 파이썬에서 insert문으로 DB에 값 집어넣기
+(예시)
+cur.execute("INSERT INTO job_recruit (title, company_name, description) values(%s,%s,%s)",
+            [title.text, company_name.text, description.text])
