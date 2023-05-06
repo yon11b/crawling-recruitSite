@@ -4,6 +4,8 @@ from lxml.html import fromstring
 import re
 import requests
 import pymysql
+from fake_useragent import UserAgent
+from selenium.webdriver.chrome.options import Options
 import time
 import emoji
 from random import choice
@@ -18,10 +20,9 @@ def get_proxies():
     for i in parser.xpath('//*[@id="list"]/div/div[2]/div/table/tbody/tr')[:20]:
         if i.xpath('.//td[7][contains(text(),"yes")]'):
             proxy = ":".join([i.xpath('.//td[1]/text()')[0],
-                             i.xpath('.//td[2]/text()')[0]])  # /text빼고도 되는지 확인
+                             i.xpath('.//td[2]/text()')[0]])
             proxies.add(proxy)
     return proxies
-
 
 # >>> DB 연결
 con = pymysql.connect(host='127.0.0.1', user='root',
@@ -33,6 +34,7 @@ while True:
     try:
         proxy = choice(proxy_server_list)
         print(proxy)
+        # 프록시 설정- 방법1
         # webdriver.DesiredCapabilities.CHROME['proxy'] = {
         #     "httpProxy": proxy,
         #     "ftpProxy": proxy,
@@ -40,10 +42,14 @@ while True:
         #     "proxyType": "MANUAL"
         # }
 
-        driver = webdriver.Chrome(
-            'D:\seeds\SWEVER\CRAWLING-test\chromedriver_win32\chromedriver.exe')
+        # 프록시 & fake-useragent 설정- 방법2
+        options = Options()
+        ua = UserAgent()        
+        options.add_argument('--proxy-server={}'.format(proxy))
+        options.add_argument('user-agent={}'.format(ua.random))        
+        driver = webdriver.Chrome(options=options, executable_path='D:\seeds\SWEVER\CRAWLING-test\chromedriver_win32\chromedriver.exe')
+        
         URL = 'https://www.linkedin.com/jobs/search?'
-
         INIT_URL = 'https://www.linkedin.com/jobs/search?keywords=It&location=%EC%8B%B1%EA%B0%80%ED%8F%AC%EB%A5%B4&geoId=102454443&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0'
         driver.get(INIT_URL)
         driver.set_window_size(1500, 800)
@@ -55,7 +61,7 @@ while True:
     except (ProxyError, SSLError, ConnectTimeout) as e:
         print('except..')
         proxy_server_list.remove(proxy)
-# 화면에 보이는 JOB LIST들 다 가져와서 jobs_list 배열에 저장.
+# 화면에 보이는 JOB LIST들 다 가져와서 jobs_list 배열에 저장하기 위해 일단 채용공고 자체를 다 가져오기
 jobs_list = driver.find_elements(
     By.CSS_SELECTOR, "div.base-card.relative.w-full.hover\:no-underline.focus\:no-underline.base-card--link.base-search-card.base-search-card--link.job-search-card")
 
@@ -67,6 +73,7 @@ PAGENUM = '0'
 GEOID = '102454443'  # 나라 고유 번호?
 time.sleep(5)
 job_detail_urls = []
+# 배너 뜨게 하는 url만 추출하기
 for i, job in enumerate(jobs_list):
     href = job.find_element(By.TAG_NAME, "a").get_attribute('href')
     start = href.find("-") + 1
@@ -84,7 +91,7 @@ for detail_url in job_detail_urls:
     driver.implicitly_wait(time_to_wait=60)
     print('===========================PRINT-URL============================')
     print(detail_url)
-    print('================================================================')
+    print('==================ㅇ==============================================')
     job_detail_info = []
     time.sleep(2)
     print(1)
