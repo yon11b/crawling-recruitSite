@@ -91,8 +91,7 @@ RE_COUNT= 0
 PASS = 0
 job_detail_infos = []
 
-#for detail_url in job_detail_urls:
-for i,detail_url in enumerate(job_detail_urls):
+for detail_url in job_detail_urls:
     RE_COUNT = 0
     PASS = 0
     driver.get(url=detail_url)
