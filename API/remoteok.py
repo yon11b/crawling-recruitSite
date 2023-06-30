@@ -35,13 +35,13 @@ def push_data_to_mysql(datas):
         tag_string = '[' + ', '.join(f'"{x}"' for x in data['tags']) + ']'
         
         con = pymysql.connect(
-            host='database-1.cgy1torosydx.us-east-1.rds.amazonaws.com',
-            port=3306,
-            user='admin',
-            password='swever123!!',
+            host='',
+            port=,
+            user='',
+            password='',
 
             charset='utf8',
-            db='SWEVER'
+            db=''
             )
         cur = con.cursor()
         cur.execute("INSERT INTO RECRUIT_POST(\
