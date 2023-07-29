@@ -45,13 +45,14 @@ def push_data_to_mysql(datas):
         con.commit()
         print("ONE TUPLE IS INSERTED!!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 idx=1
+key=''
 while idx < 100:
-    url = f'https://www.googleapis.com/customsearch/v1?q=해외 개발자 취업 후기&cx=13448b6eda37544d5&key=AIzaSyBhO6pRiAvlNMM3mJKozJ3H__NPiC9eHpk&start={idx}'
+    url = f'https://www.googleapis.com/customsearch/v1?q=핀란드 개발자 취업 후기&cx=13448b6eda37544d5&key={key}&start={idx}'    
     idx+=10
     
     # API 요청 보내기
     response = requests.get(url)
-    print(response.status_code)
+    
     data=response.json()
     print("DATA STATUS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     print(data)
