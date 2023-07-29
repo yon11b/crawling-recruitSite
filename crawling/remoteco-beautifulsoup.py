@@ -37,6 +37,7 @@
 
 # time.sleep(3)
 # driver.close()
+
 import requests
 from bs4 import BeautifulSoup as bs
 from lxml.html import fromstring
